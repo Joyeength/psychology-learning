@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>100 Ngày Tâm Lý Học</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 1rem; background: #fafafa; color: #1a1a1a; }
+    @media (prefers-color-scheme: dark) {
+      body { background: #111; color: #e5e5e5; }
+    }
+    button { font-family: inherit; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"><p style="padding:2rem;color:#888;font-family:sans-serif">Đang tải...</p></div>
+
+  <!--
+    Chạy local:  python3 -m http.server 8080
+    Mở:          http://localhost:8080/preview.html
+  -->
+  <script type="text/babel">
+    /* @jsxRuntime classic */
+    const { useState, useEffect, useRef } = React;
+    const { createRoot } = ReactDOM;
+
+    // Mock window.storage với localStorage
+    window.storage = {
+      get:  (key)        => Promise.resolve({ value: localStorage.getItem(key) }),
+      set:  (key, value) => { localStorage.setItem(key, value); return Promise.resolve(); },
+    };
+
+    // ── Inline SVG icons (Lucide-compatible) ──────────────────────────────
+    function SvgIcon({ d, size = 16, color, style = {} }) {
+      return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+          stroke={color || "currentColor"} strokeWidth="2"
+          strokeLinecap="round" strokeLinejoin="round" style={style}
+          dangerouslySetInnerHTML={{ __html: d }}
+        />
+      );
+    }
+    const p = (d) => ({ size, color, style }) => <SvgIcon d={d} size={size} color={color} style={style} />;
+
+    const BookOpen       = p('<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>');
+    const Eye            = p('<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>');
+    const Brain          = p('<path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-1.07-4.13A3 3 0 0 1 4.25 12a3 3 0 0 1 .79-2 2.5 2.5 0 0 1 .65-3.57A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 1.07-4.13A3 3 0 0 0 19.75 12a3 3 0 0 0-.79-2 2.5 2.5 0 0 0-.65-3.57A2.5 2.5 0 0 0 14.5 2Z"/>');
+    const Heart          = p('<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>');
+    const Zap            = p('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>');
+    const Users          = p('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>');
+    const Star           = p('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>');
+    const Sprout         = p('<path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 1 3.4 11.3c-2.2-.1-4-.9-5.2-2.3-.3-.4-.6-.8-.7-1.3-.1-.5 0-1 .2-1.5.3-.7.8-1.2 1.3-1.7"/>');
+    const Leaf           = p('<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>');
+    const Rocket         = p('<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>');
+    const Check          = p('<path d="M20 6 9 17l-5-5"/>');
+    const RefreshCw      = p('<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>');
+    const BookMarked     = p('<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><polyline points="10 2 10 10 13 7 16 10 16 2"/>');
+    const FlaskConical   = p('<path d="M14 2v6l3 9H7l3-9V2"/><path d="M6 2h12"/><path d="M9 15h6"/>');
+    const Lightbulb      = p('<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>');
+    const HelpCircle     = p('<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>');
+    const Pencil         = p('<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>');
+    const MousePointerClick = p('<path d="m9 9 5 12 1.774-5.226L21 14 9 9z"/><path d="m16.071 16.071 4.243 4.243"/><path d="m7.188 2.239.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656-2.12 2.122"/>');
+
+    // ── data.js ───────────────────────────────────────────────────────────
+    const MODULES_DEF = [
+      { id:1,  name:"Nền tảng",    range:[1,10]   },
+      { id:2,  name:"Nhận thức",   range:[11,20]  },
+      { id:3,  name:"Trí nhớ",     range:[21,30]  },
+      { id:4,  name:"Cảm xúc",     range:[31,40]  },
+      { id:5,  name:"Động lực",    range:[41,50]  },
+      { id:6,  name:"Xã hội",      range:[51,60]  },
+      { id:7,  name:"Nhân cách",   range:[61,70]  },
+      { id:8,  name:"Phát triển",  range:[71,80]  },
+      { id:9,  name:"Sức khỏe TT", range:[81,90]  },
+      { id:10, name:"Ứng dụng",    range:[91,100] },
+    ];
+
+    const TOPICS = {
+      1:"Tâm lý học là gì?",2:"Các trường phái TLH",3:"Phương pháp nghiên cứu",4:"Não bộ & tâm lý",5:"Ý thức & vô thức",
+      6:"Freud & phân tâm học",7:"Thuyết hành vi",8:"TLH nhân văn",9:"TLH nhận thức",10:"TLH tích cực",
+      11:"Cảm giác & tri giác",12:"Ảo giác thị giác",13:"Chú ý & tập trung",14:"Thiên kiến nhận thức",15:"Tư duy phê phán",
+      16:"Giải quyết vấn đề",17:"Sáng tạo & insight",18:"Ngôn ngữ & tư duy",19:"Ra quyết định",20:"Dunning-Kruger effect",
+      21:"Cách trí nhớ hoạt động",22:"Trí nhớ ngắn & dài hạn",23:"Mã hóa & lưu trữ",24:"Quên – điều cần thiết",25:"Ký ức sai lệch",
+      26:"Kỹ thuật ghi nhớ",27:"Cung điện ký ức",28:"Giấc ngủ & trí nhớ",29:"Chấn thương & ký ức",30:"Cải thiện trí nhớ",
+      31:"Cảm xúc là gì?",32:"6 cảm xúc cơ bản",33:"Trí tuệ cảm xúc EQ",34:"Điều tiết cảm xúc",35:"Sợ hãi & lo âu",
+      36:"Hạnh phúc & tâm lý",37:"Tức giận & quản lý",38:"Đồng cảm & thấu cảm",39:"Cảm xúc xã hội",40:"Tâm lý yêu thương",
+      41:"Maslow & tháp nhu cầu",42:"Động lực nội & ngoại",43:"Flow state",44:"Procrastination",45:"Thói quen & ý chí",
+      46:"Mục tiêu & thực hiện",47:"Tâm lý thành công",48:"Lý thuyết tự quyết",49:"Fixed vs growth mindset",50:"Kháng cự & thay đổi",
+      51:"Ảnh hưởng xã hội",52:"Tuân thủ & phục tùng",53:"Thí nghiệm Milgram",54:"Hiệu ứng đám đông",55:"Định kiến & phân biệt",
+      56:"Tình yêu & tình bạn",57:"Xung đột & hòa giải",58:"Lãnh đạo & quyền lực",59:"Thuyết phục & ảnh hưởng",60:"Mạng xã hội & tâm lý",
+      61:"Nhân cách là gì?",62:"Big Five (OCEAN)",63:"MBTI – ý nghĩa & hạn chế",64:"Enneagram",65:"Hướng nội vs hướng ngoại",
+      66:"Tự ngã & lòng tự trọng",67:"Narcissism",68:"Ranh giới cá nhân",69:"Nhân cách & stress",70:"Thay đổi nhân cách",
+      71:"Các giai đoạn phát triển",72:"Piaget & nhận thức trẻ",73:"Attachment theory",74:"Tâm lý tuổi dậy thì",75:"Khủng hoảng bản sắc",
+      76:"Tâm lý tuổi 20–30",77:"Khủng hoảng tuổi trung niên",78:"Lão hóa & tâm lý",79:"Trauma & phục hồi",80:"Tâm lý xuyên thế hệ",
+      81:"Sức khỏe tâm thần là gì?",82:"Lo âu & rối loạn lo âu",83:"Trầm cảm – hiểu đúng",84:"Stress & burnout",85:"Liệu pháp CBT",
+      86:"Mindfulness & thiền",87:"Thể dục & tâm lý",88:"Giấc ngủ & sức khỏe TT",89:"Khi nào tìm chuyên gia",90:"Self-compassion",
+      91:"Tâm lý trong công việc",92:"Tâm lý tiêu dùng",93:"Tâm lý giáo dục",94:"Tâm lý giao tiếp",95:"Tâm lý tiền bạc",
+      96:"Tâm lý thể thao",97:"Tâm lý pháp lý",98:"Tâm lý môi trường",99:"Tâm lý công nghệ",100:"Hành trình tiếp theo",
+    };
+
+    function getModBase(day) {
+      return MODULES_DEF.find(m => day >= m.range[0] && day <= m.range[1]);
+    }
+
+    // ── MODULE_EXTRAS ─────────────────────────────────────────────────────
+    const MODULE_EXTRAS = {
+      1:  { Icon: BookOpen, accent: "#534AB7" },
+      2:  { Icon: Eye,      accent: "#BA7517" },
+      3:  { Icon: Brain,    accent: "#0F6E56" },
+      4:  { Icon: Heart,    accent: "#D4537E" },
+      5:  { Icon: Zap,      accent: "#185FA5" },
+      6:  { Icon: Users,    accent: "#993C1D" },
+      7:  { Icon: Star,     accent: "#7F77DD" },
+      8:  { Icon: Sprout,   accent: "#639922" },
+      9:  { Icon: Leaf,     accent: "#1D9E75" },
+      10: { Icon: Rocket,   accent: "#993556" },
+    };
+    const MODULES = MODULES_DEF.map(m => ({ ...m, ...MODULE_EXTRAS[m.id] }));
+    const DAYS    = Array.from({ length: 100 }, (_, i) => i + 1);
+
+    function getMod(day) { return MODULES[getModBase(day).id - 1]; }
+
+    // ── Block ─────────────────────────────────────────────────────────────
+    function Block({ Icon: Ic, label, text, accent, highlight }) {
+      return (
+        <div style={{
+          padding: "11px 14px",
+          background: highlight ? accent + "14" : "rgba(128,128,128,0.07)",
+          borderLeft: `3px solid ${accent}`,
+          borderRadius: 4,
+        }}>
+          <p style={{ margin: "0 0 5px", fontSize: 10, color: "#888", textTransform: "uppercase", letterSpacing: "1px", display: "flex", alignItems: "center", gap: 4 }}>
+            {Ic && <Ic size={11} />}{label}
+          </p>
+          <p style={{ margin: 0, fontSize: 13, lineHeight: 1.7, color: "inherit" }}>{text}</p>
+        </div>
+      );
+    }
+
+    // ── DetailPanel ───────────────────────────────────────────────────────
+    function DetailPanel({ selected, mod, dc, loading, completed, onMarkDone, onRetry }) {
+      if (!selected) {
+        return (
+          <div style={{ textAlign: "center", padding: "1.5rem 0", color: "#888" }}>
+            <MousePointerClick size={26} style={{ marginBottom: 8 }} />
+            <p style={{ margin: 0, fontSize: 13 }}>Chọn một ngày để bắt đầu hành trình</p>
+          </div>
+        );
+      }
+
+      return (
+        <div style={{ border: "1px solid rgba(128,128,128,0.2)", borderRadius: 12, padding: "1rem 1.25rem", borderTop: `3px solid ${mod.accent}` }}>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem", gap: 12, flexWrap: "wrap" }}>
+            <div>
+              <p style={{ margin: "0 0 3px", fontSize: 11, color: mod.accent, fontFamily: "monospace", letterSpacing: "1px", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 4 }}>
+                <mod.Icon size={12} /> ngày {selected} · {mod.name}
+              </p>
+              <h3 style={{ margin: 0, fontSize: 17, fontWeight: 500 }}>{TOPICS[selected]}</h3>
+            </div>
+            {completed.has(selected) ? (
+              <span style={{ background: "#1D9E7518", color: "#0F6E56", fontSize: 12, padding: "5px 12px", borderRadius: 8, fontWeight: 500, flexShrink: 0, border: "1px solid #1D9E7540", display: "flex", alignItems: "center", gap: 4 }}>
+                <Check size={12} /> Hoàn thành
+              </span>
+            ) : dc && !dc.error ? (
+              <button
+                onClick={() => onMarkDone(selected)}
+                style={{ background: mod.accent, color: "#fff", border: "none", borderRadius: 8, padding: "6px 14px", fontSize: 12, cursor: "pointer", fontWeight: 500, flexShrink: 0, display: "flex", alignItems: "center", gap: 4 }}
+              >
+                <Check size={12} /> Đánh dấu xong
+              </button>
+            ) : null}
+          </div>
+
+          {loading ? (
+            <p style={{ color: "#888", fontSize: 13, margin: 0, display: "flex", alignItems: "center", gap: 6 }}>
+              <RefreshCw size={13} style={{ animation: "spin 1s linear infinite" }} /> Đang tải...
+            </p>
+          ) : dc && dc.error ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <p style={{ color: "#c0392b", fontSize: 13, margin: 0 }}>Không tải được nội dung: {dc.msg}</p>
+              <button onClick={() => onRetry(selected)} style={{ alignSelf: "flex-start", background: "transparent", border: "1px solid rgba(128,128,128,0.3)", borderRadius: 6, padding: "5px 12px", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 5 }}>
+                <RefreshCw size={11} /> Thử lại
+              </button>
+            </div>
+          ) : dc ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <Block Icon={BookMarked}   label="Khái niệm chính"    text={dc.khaiNiem}    accent={mod.accent} />
+              <Block Icon={Lightbulb}    label="Sự thật thú vị"     text={dc.suThatThuVi} accent={mod.accent} />
+              <Block Icon={FlaskConical} label="Ví dụ / thí nghiệm" text={dc.viDu}        accent={mod.accent} />
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                <Block Icon={HelpCircle} label="Câu hỏi suy ngẫm" text={dc.cauHoi}  accent={mod.accent} highlight />
+                <Block Icon={Pencil}     label="Nhiệm vụ hôm nay" text={dc.nhiemVu} accent={mod.accent} highlight />
+              </div>
+            </div>
+          ) : (
+            <p style={{ color: "#888", fontSize: 13, margin: 0 }}>Chưa có nội dung cho ngày này.</p>
+          )}
+        </div>
+      );
+    }
+
+    // ── PsychChallenge ────────────────────────────────────────────────────
+    function PsychChallenge() {
+      const [completed, setCompleted]     = useState(new Set());
+      const [selected, setSelected]       = useState(null);
+      const [cache, setCache]             = useState({});
+      const [loadingDays, setLoadingDays] = useState(new Set());
+      const fetchingRef = useRef(new Set());
+
+      useEffect(() => {
+        window.storage.get("psych100_done")
+          .then(r => { if (r && r.value) setCompleted(new Set(JSON.parse(r.value))); })
+          .catch(() => {});
+      }, []);
+
+      useEffect(() => {
+        const day = selected;
+        if (!day || cache[day] || fetchingRef.current.has(day)) return;
+        fetchingRef.current.add(day);
+        setLoadingDays(s => new Set([...s, day]));
+        fetch(`./lessons/${day}.json`)
+          .then(r => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))
+          .then(data => setCache(c => ({ ...c, [day]: data })))
+          .catch(e   => setCache(c => ({ ...c, [day]: { error: true, msg: e.message } })))
+          .finally(() => {
+            setLoadingDays(s => { const n = new Set(s); n.delete(day); return n; });
+            fetchingRef.current.delete(day);
+          });
+      }, [selected]);
+
+      function markDone(day) {
+        setCompleted(prev => {
+          const next = new Set(prev);
+          next.add(day);
+          window.storage.set("psych100_done", JSON.stringify([...next])).catch(() => {});
+          return next;
+        });
+      }
+
+      function retry(day) {
+        setCache(c => { const n = { ...c }; delete n[day]; return n; });
+      }
+
+      const mod     = selected ? getMod(selected) : null;
+      const dc      = selected ? cache[selected]   : null;
+      const loading = selected ? loadingDays.has(selected) : false;
+      const count   = completed.size;
+
+      return (
+        <div style={{ padding: "1.5rem 0.25rem", fontFamily: "system-ui, -apple-system, sans-serif", maxWidth: 680, margin: "0 auto" }}>
+          <div style={{ marginBottom: "1.5rem" }}>
+            <p style={{ color: "#888", fontSize: 11, letterSpacing: "2px", textTransform: "uppercase", margin: "0 0 4px" }}>Challenge · 100 ngày</p>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 8 }}>
+              <span style={{ fontSize: 20, fontWeight: 500 }}>Tâm lý học</span>
+              <span style={{ fontFamily: "monospace", fontSize: 13, color: "#888" }}>{count}/100 ngày</span>
+            </div>
+            <div style={{ height: 4, background: "rgba(128,128,128,0.15)", borderRadius: 2, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${count}%`, background: "#534AB7", borderRadius: 2, transition: "width 0.4s" }} />
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 12px", marginBottom: "1rem" }}>
+            {MODULES.map(m => (
+              <span key={m.id} style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "#888" }}>
+                <span style={{ width: 7, height: 7, borderRadius: "50%", background: m.accent, flexShrink: 0, display: "inline-block" }} />
+                {m.name}
+              </span>
+            ))}
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(10, 1fr)", gap: 5, marginBottom: "1.5rem" }}>
+            {DAYS.map(day => {
+              const m = getMod(day), done = completed.has(day), sel = selected === day;
+              return (
+                <button
+                  key={day}
+                  onClick={() => setSelected(day)}
+                  title={TOPICS[day]}
+                  style={{
+                    aspectRatio: "1",
+                    border: sel ? `2px solid ${m.accent}` : "1px solid rgba(128,128,128,0.2)",
+                    borderRadius: 6,
+                    background: done ? m.accent + "22" : sel ? m.accent + "14" : "transparent",
+                    cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                    flexDirection: "column", position: "relative", padding: 0,
+                    transition: "all 0.12s", outline: "none",
+                  }}
+                >
+                  <span style={{ fontFamily: "monospace", fontSize: 10, fontWeight: done || sel ? 600 : 400, color: done || sel ? m.accent : "#888", lineHeight: 1 }}>{day}</span>
+                  {done && <Check size={7} color={m.accent} style={{ position: "absolute", bottom: 2, right: 2 }} />}
+                </button>
+              );
+            })}
+          </div>
+
+          <DetailPanel
+            selected={selected}
+            mod={mod}
+            dc={dc}
+            loading={loading}
+            completed={completed}
+            onMarkDone={markDone}
+            onRetry={retry}
+          />
+        </div>
+      );
+    }
+
+    createRoot(document.getElementById("root")).render(<PsychChallenge />);
+  </script>
+</body>
+</html>
