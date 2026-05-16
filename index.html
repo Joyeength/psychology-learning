@@ -1,9 +1,31 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO & identity -->
   <title>100 Ngày Tâm Lý Học</title>
+  <meta name="description" content="Khám phá tâm lý học qua 100 bài học ngắn hàng ngày — từ Freud đến flow state, từ trí nhớ đến hạnh phúc." />
+
+  <!-- Open Graph (Facebook, Zalo, Messenger) -->
+  <meta property="og:type"         content="website" />
+  <meta property="og:title"        content="100 Ngày Tâm Lý Học" />
+  <meta property="og:description"  content="Khám phá tâm lý học qua 100 bài học ngắn hàng ngày — từ Freud đến flow state, từ trí nhớ đến hạnh phúc." />
+  <meta property="og:image"        content="https://joyeength.github.io/psychology-learning/og-image.png" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale"       content="vi_VN" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="100 Ngày Tâm Lý Học" />
+  <meta name="twitter:description" content="Khám phá tâm lý học qua 100 bài học ngắn hàng ngày." />
+  <meta name="twitter:image"       content="https://joyeength.github.io/psychology-learning/og-image.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; padding: 1rem; background: #fafafa; color: #1a1a1a; }
@@ -12,27 +34,29 @@
     }
     button { font-family: inherit; }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.development.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.development.js"></script>
+
+  <!-- storage.js must load before component scripts -->
+  <script src="./storage.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js"></script>
 </head>
 <body>
-  <div id="root"><p style="padding:2rem;color:#888;font-family:sans-serif">Đang tải...</p></div>
+  <div id="root">
+    <div style="padding:2rem;text-align:center;font-family:system-ui,sans-serif;color:#888;font-size:13px;">
+      Đang tải...
+    </div>
+  </div>
 
   <!--
     Chạy local:  python3 -m http.server 8080
-    Mở:          http://localhost:8080/preview.html
+    Mở:          http://localhost:8080/
   -->
   <script type="text/babel">
     /* @jsxRuntime classic */
     const { useState, useEffect, useRef } = React;
     const { createRoot } = ReactDOM;
-
-    // Mock window.storage với localStorage
-    window.storage = {
-      get:  (key)        => Promise.resolve({ value: localStorage.getItem(key) }),
-      set:  (key, value) => { localStorage.setItem(key, value); return Promise.resolve(); },
-    };
 
     // ── Inline SVG icons (Lucide-compatible) ──────────────────────────────
     function SvgIcon({ d, size = 16, color, style = {} }) {
