@@ -10,7 +10,7 @@
 | # | Câu hỏi | Ảnh hưởng |
 |---|--------|---------|
 | Q1 | Build vs no-build (importmap + esm.sh vs Vite)? | Ảnh hưởng deploy workflow, Lighthouse score, bundle size |
-| Q2 | GitHub Pages repo URL đầy đủ là gì? | Hardcode vào og:image URL trong index.html |
+| Q2 | ~~GitHub Pages repo URL đầy đủ là gì?~~ **Resolved:** `https://joyeength.github.io/psychology-learning` | Hardcode vào og:image URL trong index.html |
 | Q3 | Storage init: pattern nào để đảm bảo `window.storage` sẵn sàng trước khi component mount? | Tránh race condition lúc khởi động |
 | Q4 | Cache headers cho `lessons/*.json` — cần cấu hình không? | Nếu update content thì user cũ có nhận được version mới không? |
 

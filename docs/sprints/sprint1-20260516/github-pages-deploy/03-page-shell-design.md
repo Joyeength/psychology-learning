@@ -22,7 +22,7 @@
   <meta property="og:type"         content="website" />
   <meta property="og:title"        content="100 Ngày Tâm Lý Học" />
   <meta property="og:description"  content="Khám phá tâm lý học qua 100 bài học ngắn hàng ngày — từ Freud đến flow state, từ trí nhớ đến hạnh phúc." />
-  <meta property="og:image"        content="[BASE_URL]/og-image.png" />
+  <meta property="og:image"        content="https://joyeength.github.io/psychology-learning/og-image.png" />
   <meta property="og:image:width"  content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:locale"       content="vi_VN" />
@@ -31,7 +31,7 @@
   <meta name="twitter:card"        content="summary_large_image" />
   <meta name="twitter:title"       content="100 Ngày Tâm Lý Học" />
   <meta name="twitter:description" content="Khám phá tâm lý học qua 100 bài học ngắn hàng ngày." />
-  <meta name="twitter:image"       content="[BASE_URL]/og-image.png" />
+  <meta name="twitter:image"       content="https://joyeength.github.io/psychology-learning/og-image.png" />
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
