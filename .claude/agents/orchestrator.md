@@ -81,6 +81,8 @@ Per feature:
   RELEASE     → technical_writer + devops write release.md
 
 RETROSPECTIVE → write sprint-report.md (at sprint root, not inside pre-planning/)
+MERGE         → after user confirms sprint-report: git commit + push to main
+               user runs /sprint-close to execute this step
 ```
 
 ---
@@ -159,6 +161,7 @@ Save to `docs/sprints/sprint[N]-YYYYMMDD/pre-planning/01-sprint-planning.md`:
 - [ ] DEBUG → `[feature-slug]/debug.md` *(chỉ tạo nếu cần)*
 - [ ] RELEASE → `[feature-slug]/release.md`
 - [ ] REPORT → `sprint-report.md`
+- [ ] MERGE → `/sprint-close` (git commit + push to main)
 
 ## Agents & Roles
 | Agent | Vai trò | Output |

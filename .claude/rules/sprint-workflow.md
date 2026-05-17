@@ -67,6 +67,10 @@ Mỗi topic research được lưu tại `docs/research/[topic-name].md`.
    e. RELEASE     → technical_writer + devops tạo release.md
 
 4. RETROSPECTIVE  → orchestrator tạo sprint-report.md (ở root sprint folder)
+
+5. MERGE          → sau khi user confirm sprint-report:
+                    git commit tất cả thay đổi của sprint + git push lên main
+                    Dùng /sprint-close để thực hiện bước này
 ```
 
 ---
@@ -89,7 +93,7 @@ Nội dung:
 - **Features in scope**: danh sách features được chọn (link sang từng `[feature]/`)
 - **Out of scope**: explicitly loại ra
 - **Timeline**: ngày bắt đầu, ngày kết thúc dự kiến
-- **Lifecycle checklist**: `[ ]` checkbox cho từng phase (PRE-PLANNING → PLANNING → SPEC → BUILD → QC → RELEASE → REPORT)
+- **Lifecycle checklist**: `[ ]` checkbox cho từng phase (PRE-PLANNING → PLANNING → SPEC → BUILD → QC → RELEASE → REPORT → MERGE)
 - **Agents & Roles**: agents tham gia + vai trò + output từng agent
 
 ### `02-pre-planning.md` — Owner: `orchestrator`

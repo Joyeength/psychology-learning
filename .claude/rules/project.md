@@ -48,6 +48,7 @@ Per feature — repeat for each [feature-slug]/:
   RELEASE    → technical_writer + devops write [feature]/release.md
 
 REPORT       → orchestrator writes sprint-report.md (at sprint root, not in pre-planning/)
+MERGE        → after user confirms sprint-report: git commit + push to main (/sprint-close)
 ```
 
 ### Feature development (within a sprint)
@@ -63,6 +64,7 @@ orchestrator (pre-planning/02-pre-planning.md → candidates, research, go/no-go
       → security_engineer (security check)
       → devops + technical_writer ([feature]/release.md)
   → orchestrator (sprint-report.md)
+  → [user confirms report] → /sprint-close (git commit + push to main)
 ```
 
 ### Content production (within a sprint)

@@ -42,6 +42,27 @@ orchestrator (pre-planning → planning) → ux_designer (flow) → tech_lead (p
 orchestrator → researcher → content_writer → editor → qa_tester → save
 ```
 
+## Skills (slash commands)
+
+| Command | When to use |
+|---------|-------------|
+| `/content-batch <day or range>` | Generate lessons via full pipeline: researcher → content_writer → editor → qa_tester |
+| `/compact` | Save session handoff to memory, then compact the conversation |
+| `/status` | Show current sprint phase, feature status, and lesson count |
+| `/sprint-start` | Kick off a new sprint — creates folder structure, calls orchestrator |
+| `/sprint-close` | Close a sprint — verify sprint-report, then git commit + push all changes to main |
+| `/feature <name>` | Start SPEC phase for a feature — calls ux_designer then tech_lead |
+| `/qc <day or range>` | Validate lesson JSON schema via qa_tester |
+
+## Hooks (automatic)
+
+| Trigger | What it does |
+|---------|-------------|
+| Write `*.jsx` / `*.js` | Warns if file exceeds 400 lines (hard limit: 500) |
+| Write `public/lessons/*.json` | Validates 5 Vietnamese keys; reports pass / warn / fail |
+| Before `git push` | Prints pre-push checklist (QC, dev-log, security, sprint-report confirmed) |
+| Claude stops | Reminds to `/compact` at end of session |
+
 ## Quick Reference
 
 **Start any new work by calling `orchestrator`** — it writes the spec (BA), plans the batch (PM), and delegates to the right agents (Scrum Master).

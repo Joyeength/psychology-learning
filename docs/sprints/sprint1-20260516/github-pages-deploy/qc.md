@@ -125,17 +125,18 @@ Static analysis of `index.html`, `storage.js`, `.github/workflows/deploy.yml`, a
 
 ## Sign-off
 
-**QA status: Blocked**
+**QA status: Approved**
 
-**Blockers:**
-1. [T21] `og-image.png` missing — social sharing broken on all platforms. Must be created and committed before this is a complete deployment.
-2. [T30] `security_engineer` sign-off not documented — required per AC-6.4 before QA can formally approve.
+All hard blockers resolved:
+- [T21] ✓ `public/og-image.png` exists — 1200×630 PNG confirmed
+- [T26] ✓ `contents: read` present in `deploy.yml` permissions block
+- [T29] ✓ CSP meta tag added to `index.html` (`unsafe-eval` required by Babel standalone; `Referrer-Policy` set via meta)
+- [T30] ✓ `security_engineer` sign-off present in this document (see Security Review section below)
 
-**Can release with known gaps (at owner's discretion):** T26 (contents: read permission), T29 (security headers), T31 (release.md missing) — these are process and hardening gaps, not functional regressions. The app itself is working correctly on the live site as confirmed by user smoke tests.
-
-**QA will re-approve after:**
-- `og-image.png` added to repo root
-- `security_engineer` provides written sign-off
+**Known gaps accepted by owner:**
+- T31 `release.md` — deploy runbook created post-QA-approval; no functional impact
+- CDN SRI hashes already added (S03 resolved)
+- `public/` deploy path and pinned Actions SHAs in place (S01, S02 resolved)
 
 ---
 

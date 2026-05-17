@@ -56,11 +56,11 @@ Buffer: 2026-05-30 → 2026-06-02 cho hotfix / rollback.
 - [x] PRE-PLANNING → [`02-pre-planning.md`](02-pre-planning.md)
 - [x] PLANNING → `01-sprint-planning.md` (file này)
 - [x] SPEC → [`github-pages-deploy/`](../github-pages-deploy/) — 01 feature-spec · 02 ux-flow · 03 page-shell · 04 responsive · 05 component-design · 06 edge-cases · 07 accessibility · 08 technical-plan
-- [ ] BUILD → code + [`github-pages-deploy/dev-log.md`](../github-pages-deploy/dev-log.md)
-- [ ] QC → [`github-pages-deploy/qc.md`](../github-pages-deploy/qc.md) + security review
-- [ ] DEBUG → [`github-pages-deploy/debug.md`](../github-pages-deploy/debug.md) *(chỉ tạo nếu cần)*
-- [ ] RELEASE → [`github-pages-deploy/release.md`](../github-pages-deploy/release.md)
-- [ ] REPORT → [`sprint-report.md`](../sprint-report.md)
+- [x] BUILD → code + [`github-pages-deploy/dev-log.md`](../github-pages-deploy/dev-log.md)
+- [x] QC → [`github-pages-deploy/qc.md`](../github-pages-deploy/qc.md) + security review
+- [ ] DEBUG → [`github-pages-deploy/debug.md`](../github-pages-deploy/debug.md) *(không cần)*
+- [x] RELEASE → [`github-pages-deploy/release.md`](../github-pages-deploy/release.md)
+- [x] REPORT → [`sprint-report.md`](../sprint-report.md)
 
 ---
 
