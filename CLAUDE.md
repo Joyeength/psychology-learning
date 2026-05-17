@@ -13,6 +13,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - [State flow](.claude/rules/state-flow.md) — day selection, fetch lifecycle (fetchingRef + loadingDays), retry, mark complete
 - [Code style](.claude/rules/code-style.md) — 500-line file limit, split strategy, naming
 - [Context management](.claude/rules/context-management.md) — compact protocol, session handoff format, what to save
+- [Memory guide](.claude/rules/memory-guide.md) — when to save global vs local memory, types, decision checklist
+- [Learning loop](.claude/rules/learning-loop.md) — LOCATE→EXPLAIN→PROCESS→GATE protocol, Wired×Bloom matrix, questioning tool selection (5W1H / Socratic / QFT)
+
+## Output Styles
+
+Định nghĩa cách giải thích khái niệm tâm lý học theo từng Wired Level. Dùng khi agent/skill cần chọn depth phù hợp với learner.
+
+| File | Level | Đối tượng | Bloom's target |
+|------|-------|----------|---------------|
+| `.claude/output-styles/level-1-child.md` | 1 | Chưa biết gì | Remember |
+| `.claude/output-styles/level-2-teen.md` | 2 | Nghe qua, chưa giải thích được | Understand |
+| `.claude/output-styles/level-3-undergrad.md` | 3 | Giải thích được, chưa áp dụng | Apply + Analyze |
+| `.claude/output-styles/level-4-grad.md` | 4 | Đã áp dụng, muốn phản biện | Analyze + Evaluate |
+| `.claude/output-styles/level-5-expert.md` | 5 | Có thể dạy người khác | Evaluate + Create |
 
 ## Agents
 
@@ -29,6 +43,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `researcher`        | Sonnet 4.6 | Content pipeline — research                   |
 | `content_writer`    | Sonnet 4.6 | Content pipeline — write lesson JSON          |
 | `editor`            | Sonnet 4.6 | Content pipeline — review language & pedagogy |
+| `tutor`             | Sonnet 4.6 | Learning loop — LOCATE→EXPLAIN→PROCESS→GATE, interactive tutoring |
+| `socratic-coach`    | Sonnet 4.6 | Deep Socratic questioning for Level 3+ learners |
 
 **Feature development pipeline:**
 
@@ -53,13 +69,19 @@ orchestrator → researcher → content_writer → editor → qa_tester → save
 | `/sprint-close` | Close a sprint — verify sprint-report, then git commit + push all changes to main |
 | `/feature <name>` | Start SPEC phase for a feature — calls ux_designer then tech_lead |
 | `/qc <day or range>` | Validate lesson JSON schema via qa_tester |
+| `/remember <thing>` | Save something to memory — auto-decides global vs local, type, and file |
+| `/explain <day or topic> [level:<1-5>]` | Explain a concept at the right Wired level — runs LOCATE if no level given |
+| `/quiz <day> [level:<1-5>]` | Generate practice questions using 5W1H or Socratic, matched to level |
+| `/evaluate` | Evaluate user's answer against Bloom's criteria, give GATE feedback |
+
+**Skills vs `tutor` agent:** Skills = one-shot (quick explanation, practice questions, or check one answer). `tutor` = multi-turn session (runs full LOCATE→EXPLAIN→PROCESS→GATE interactively).
 
 ## Hooks (automatic)
 
 | Trigger | What it does |
 |---------|-------------|
-| Write `*.jsx` / `*.js` | Warns if file exceeds 400 lines (hard limit: 500) |
-| Write `public/lessons/*.json` | Validates 5 Vietnamese keys; reports pass / warn / fail |
+| Write or Edit `*.jsx` / `*.js` | Warns if file exceeds 400 lines (hard limit: 500) |
+| Write or Edit `public/lessons/*.json` | Validates 5 Vietnamese keys; reports pass / warn / fail |
 | Before `git push` | Prints pre-push checklist (QC, dev-log, security, sprint-report confirmed) |
 | Claude stops | Reminds to `/compact` at end of session |
 

@@ -32,41 +32,6 @@ description: Project overview, agent team, and workflows
 Work is organized in sprints. Each sprint is stored at `docs/sprints/sprint[N]-YYYYMMDD/`.
 See `.claude/rules/sprint-workflow.md` for full sprint structure and doc templates.
 
-```
-PRE-PLANNING → orchestrator writes pre-planning/02-pre-planning.md (candidates + research)
-PLANNING     → orchestrator writes pre-planning/01-sprint-planning.md (confirmed plan)
-               + pre-planning/03-user-stories.md + pre-planning/04-risks.md
-
-Per feature — repeat for each [feature-slug]/:
-  SPEC       → ux_designer writes [feature]/01-feature-spec.md, 02-ux-flow.md, ...
-               tech_lead writes [feature]/NN-technical-plan.md (last numbered file)
-  BUILD      → [code] + tech_lead plan/review
-               tech_lead creates [feature]/dev-log.md + updates after every change
-  QC         → qa_tester writes/updates [feature]/qc.md
-  SECURITY   → security_engineer reviews
-  DEBUG      → tech_lead writes [feature]/debug.md (when needed)
-  RELEASE    → technical_writer + devops write [feature]/release.md
-
-REPORT       → orchestrator writes sprint-report.md (at sprint root, not in pre-planning/)
-MERGE        → after user confirms sprint-report: git commit + push to main (/sprint-close)
-```
-
-### Feature development (within a sprint)
-```
-orchestrator (pre-planning/02-pre-planning.md → candidates, research, go/no-go)
-  → orchestrator (pre-planning/01-sprint-planning.md → confirmed features + checklist)
-  → [per feature]:
-      ux_designer ([feature]/01-feature-spec.md + numbered SPEC docs)
-      → tech_lead ([feature]/NN-technical-plan.md)
-      → [write code] + tech_lead ([feature]/dev-log.md after each change)
-      → tech_lead (code review)
-      → qa_tester ([feature]/qc.md)
-      → security_engineer (security check)
-      → devops + technical_writer ([feature]/release.md)
-  → orchestrator (sprint-report.md)
-  → [user confirms report] → /sprint-close (git commit + push to main)
-```
-
 ### Content production (within a sprint)
 ```
 orchestrator (batch plan → pre-planning/01-sprint-planning.md)

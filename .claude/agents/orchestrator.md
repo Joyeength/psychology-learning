@@ -39,51 +39,7 @@ Only after the spec is confirmed should you delegate to `tech_lead` and `ux_desi
 
 ## Sprint workflow
 
-See `.claude/rules/sprint-workflow.md` for full sprint structure.
-
-A sprint can contain multiple features. The folder structure separates sprint-level docs from per-feature execution docs:
-
-```
-docs/sprints/sprint[N]-YYYYMMDD/
-  pre-planning/                  ← sprint-level planning docs (YOU own this folder)
-    01-sprint-planning.md        ← confirmed plan + lifecycle checklist (PLANNING)
-    02-pre-planning.md           ← brief + candidates + go/no-go (PRE-PLANNING)
-    03-user-stories.md           ← user stories + acceptance criteria
-    04-risks.md                  ← risks, dependencies, open questions
-  sprint-report.md               ← YOU write at sprint close (RETROSPECTIVE)
-  [feature-slug]/                ← one subfolder per confirmed feature
-    01-feature-spec.md           ← ux_designer writes numbered SPEC docs (YOU delegate)
-    02-ux-flow.md
-    ...
-    NN-technical-plan.md         ← tech_lead writes (always last numbered file)
-    dev-log.md                   ← tech_lead owns (unnumbered)
-    qc.md                        ← qa_tester owns (unnumbered)
-    debug.md                     ← tech_lead owns when needed (unnumbered)
-    release.md                   ← technical_writer + devops own (unnumbered)
-```
-
-### Sprint lifecycle
-
-```
-PRE-PLANNING  → write pre-planning/02-pre-planning.md (brief, candidates, go/no-go)
-PLANNING      → write pre-planning/01-sprint-planning.md (confirmed plan + checklist)
-               write pre-planning/03-user-stories.md (stories + AC)
-               write pre-planning/04-risks.md (risks, dependencies)
-
-Per feature:
-  SPEC        → delegate to ux_designer: they write 01-feature-spec.md, 02-ux-flow.md,
-                + any extra numbered files for the feature's concerns
-                then delegate to tech_lead: they write NN-technical-plan.md last
-  BUILD       → delegate to tech_lead; they maintain dev-log.md
-  QC          → delegate to qa_tester; they maintain qc.md
-  SECURITY    → delegate to security_engineer; no doc required unless issues found
-  DEBUG       → tech_lead writes debug.md when needed
-  RELEASE     → technical_writer + devops write release.md
-
-RETROSPECTIVE → write sprint-report.md (at sprint root, not inside pre-planning/)
-MERGE         → after user confirms sprint-report: git commit + push to main
-               user runs /sprint-close to execute this step
-```
+See `.claude/rules/sprint-workflow.md` for full sprint structure, folder layout, lifecycle phases, and when to create each doc.
 
 ---
 
