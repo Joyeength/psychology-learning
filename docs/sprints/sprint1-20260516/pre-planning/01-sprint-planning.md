@@ -61,6 +61,7 @@ Buffer: 2026-05-30 → 2026-06-02 cho hotfix / rollback.
 - [ ] DEBUG → [`github-pages-deploy/debug.md`](../github-pages-deploy/debug.md) *(không cần)*
 - [x] RELEASE → [`github-pages-deploy/release.md`](../github-pages-deploy/release.md)
 - [x] REPORT → [`sprint-report.md`](../sprint-report.md)
+- [x] MERGE → git commit `8e4dce6` + pushed to `master` (2026-05-17)
 
 ---
 
